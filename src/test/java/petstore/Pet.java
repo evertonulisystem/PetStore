@@ -17,8 +17,8 @@ public class Pet {
     public String lerJson(String caminhoJson) throws IOException {
         return new String(Files.readAllBytes(Paths.get(caminhoJson)));
     }
-    @Test
-    public void incluirPet(){
+    @Test(priority = 1)
+    public void incluirPet() {
         String jsonBody = null;
         try {
             jsonBody = lerJson("db/pet1.json");
@@ -30,25 +30,61 @@ public class Pet {
                 .contentType("application/json") //comum em api rest - antes era tet/xml
                 .log().all()
                 .body(jsonBody)
-        .when()
+                .when()
                 .post(uri)
-
-        .then()
+                .then()
                 .log().all()
                 .statusCode(200)
-        //noovo itens anaxo
-                .body("name", is("Snoopy6"))
+                //noovo itens anaxo
+                .body("name", is("Spike"))
                 .body("status", is("available"))
-
-                //pegando itens dentro de outra..exemplo categor ..name
+                 //pegando itens dentro de outra..exemplo categor ..name
                 .body("category.name", is("dog")) //para valor unico
                 .body("tags.name", contains("sta")) //´para listas
 
+        ;
+    }
+        @Test(priority = 2)
+        public void consultarPet() {
+        String petId = "1010101010";
+       given()
+            .contentType("application/json")
+            .log().all()//nao tem json, nao tem body
+    .when()
+            .get(uri +"/"+ petId )//o endereco de cima, mais uma /, e o numero a localizar
+    .then()
+            .log().all()
+            .statusCode(200)
+               .body("name", is("Spike"))
+               .body("category.name",is("dog"))
+               .body("status", is("available"))
+ ;
+  }
 
+  @Test(priority = 3)
+  public void alterarPet() throws IOException {
+        String jsonBody = lerJson("db/pet2.json");
+
+        given()
+                .contentType("application/json")
+                .log().all()
+                .body(jsonBody)
+                .when()
+                .put(uri)
+                .then()
+                .log().all()
+                .statusCode(200)
+                .body("name", is("Spok"))
+                .body("status", is("sold"))
 
         ;
+  }
 
+    @Test(priority = 4)
+    public void excluirPet() throws IOException {
 
 
     }
-}
+
+ }
+

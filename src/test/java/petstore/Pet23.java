@@ -9,7 +9,7 @@ import java.nio.file.Paths;
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.CoreMatchers.is;
 
-public class Pet2 {
+public class Pet23 {
 
     String uri = "https://petstore.swagger.io/v2/pet";
 
